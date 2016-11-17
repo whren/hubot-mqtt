@@ -195,24 +195,34 @@ module.exports = function(robotAdapter) {
 
 
   robot.on('help:get', function(msg, command, action_id) {
+    // a message is passed
     if (msg) {
+      // there is a command specified
       if (command) {
-        if (action_id) {
+        // command is this command name
+        if (command.toUpperCase() == command_name.toUpperCase()) {
+          // for each actions
           for (var key in actions) {
             if (actions.hasOwnProperty(key)) {
-              if (command.toUpperCase() == command_name.toUpperCase()
-                  && action_id.toUpperCase() === key.toUpperCase()) {
+              // either action is not specified or is equal to current iteration key
+              if (!action_id || (action_id && action_id.toUpperCase() === key.toUpperCase())) {
+                // send help message
                 msg.send(show_help(actions[key]) + "\n[options] can be :\n--output : use verbose output");
-                break;
+                // action specified
+                if (action_id) {
+                  // stop
+                  break;
+                }
               }
             }
           }
-        } else {
-          var msg_txt = help_msg;
-
-          msg_txt += "\n[options] can be :\n--output : use verbose output";
-          msg.send(msg_txt);
         }
+      } else {
+        // output full current command help
+        var msg_txt = help_msg;
+
+        msg_txt += "\n[options] can be :\n--output : use verbose output";
+        msg.send(msg_txt);
       }
     }
   });
