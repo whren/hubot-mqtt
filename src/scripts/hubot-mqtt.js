@@ -201,20 +201,25 @@ module.exports = function(robotAdapter) {
       if (command) {
         // command is this command name
         if (command.toUpperCase() == command_name.toUpperCase()) {
-          // for each actions
-          for (var key in actions) {
-            if (actions.hasOwnProperty(key)) {
-              // either action is not specified or is equal to current iteration key
-              if (!action_id || (action_id && action_id.toUpperCase() === key.toUpperCase())) {
+          if (action_id) {
+            // for each actions
+            for (var key in actions) {
+              if (actions.hasOwnProperty(key)) {
+                // action is is equal to current iteration key
+                if (action_id.toUpperCase() === key.toUpperCase()) {
                 // send help message
                 msg.send(show_help(actions[key]) + "\n[options] can be :\n--output : use verbose output");
-                // action specified
-                if (action_id) {
                   // stop
                   break;
                 }
               }
             }
+          } else {
+            // output full current command help
+            var msg_txt = help_msg;
+
+            msg_txt += "\n[options] can be :\n--output : use verbose output";
+            msg.send(msg_txt);            
           }
         }
       } else {
